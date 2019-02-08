@@ -1,12 +1,192 @@
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>MSPR Festival</title>
-    </head>
-    <body>
-        <div></div>
-    </body>
-    </html>
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>MSPR Festival</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+        integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css"
+        integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <link rel="stylesheet" href=" https://unpkg.com/leaflet@1.2.0/dist/leaflet.css ">
+    <script src=" https://cdnjs.cloudflare.com/ajax/libs/vue/2.3.4/vue.js "> </script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Raleway');
+    </style>
+
+
+</head>
+
+<body>
+    <div id="main">
+        <header>
+            <div class="topbar">
+                <nav class="navbar navbar-inverse">
+                    <div class="container-fluid">
+                        <div class="navbar-header">
+                            <button class="navbar-toggle btn" data-toggle="collapse" data-target="#myNavbar">
+                                <i class="fas fa-bars"></i>
+                            </button>
+                            <a class="navbar-brand" @click="getlisteArtistes()">
+                                <img src="img/Logo Nation Sounds v2.png" width="50%" class="logo">
+                            </a>
+                        </div>
+                        <div class="collapse navbar-collapse" id="myNavbar">
+                            <ul class="nav navbar-nav">
+                                <li @click="getProgramme()">Programmation</li>
+                                <li>Billeterie</li>
+                                <li @click="getFAQ(); recuperedFAQ()">Informations pratiques - FAQ</li>
+                                <li><a href="carte.html">Plan du festival</a></li>
+                                <li @click="getEndroits(); recuperedEndroits()">Endroits pratiques</li>
+                                <li >Photos</li>
+                                <li @click="getPartenaires(); recuperedPartenaires()">Nos partenaires</li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </header>
+
+        <div class="row" v-if="affichage.listeArtistes">
+            <div v-for="artiste in artistes" class="artiste d-none col-12 col-sm-6 col-lg-4 d-block">
+                <div>
+                    <div style="width: auto;">
+                        <div class="info-artiste" data-toggle="modal" :data-target="'#ModalArtiste' + artiste.id">
+                            <img :src="artiste.acf.image.url" width="100%">
+                            <h5 class="title mb-3" v-html="artiste.acf.nom"></h5>
+                            <div>
+                                <div class="modal fade" :id="'ModalArtiste' + artiste.id" tabindex="-1" role="dialog"
+                                    aria-labelledby="ModalArtisteTitle" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLongTitle"
+                                                    v-html="artiste.acf.nom"></h5>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <img :src="artiste.acf.image.url" width="100%">
+                                            <div class="modal-body">
+                                                <div class="info-modal">Nationalité : <span
+                                                        v-html="artiste.acf.nationalite"></span></div>
+                                                <div class="info-modal">Type de musique : <span
+                                                        v-html="artiste.acf.type_de_musique"></span></div>
+                                                <div class="description-modal"><span
+                                                        v-html="artiste.acf.description"></span></div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div v-if="affichage.endroit">
+                <h1>Les Endroits pratiques</h1>
+                <div v-for="endroit in endroits" class="block-endroit d-none col-12 col-sm-6 col-lg-4 d-block">
+                    <div>
+                        <h5 v-html="endroit.acf.nom"></h5>
+                        <hr>
+                        <div>Horaires: <span v-html="endroit.acf.horaires"></span></div>
+                    </div>
+                </div>
+            </div>
+            <div v-if="affichage.Programme">
+                <h1>Programmation</h1>
+                <div class="boutons"><button @click="recuperedProgrammationVendredi(); getprogrammeVendredi()"
+                        class="btn">Vendredi</button>
+                    <button @click="recuperedProgrammationSamedi(); getprogrammeSamedi()" class="btn">Samedi</button>
+                    <button @click="recuperedProgrammationDimanche(); getprogrammeDimanche()"
+                        class="btn">Dimanche</button>
+                </div>
+                <div v-if="affichage.programmeVendredi">
+                    <div v-for="programmeVendredi in programmesVendredi" class="programme">
+                        <p class="scene" v-html=" 'Scène - ' + programmeVendredi.acf.scene"></p>
+                        <hr>
+                        <div class="info-prog">
+                            <span class="prog-artiste" v-html="programmeVendredi.acf.artiste"></span><br>
+                            <span class="prog-horaire"
+                                v-html=" ' à ' +programmeVendredi.acf.horaire + ' heures '"></span>
+                        </div>
+                    </div>
+                </div>
+                <div v-if="affichage.programmeSamedi">
+                    <div v-for="programmeSamedi in programmesSamedi" class="programme">
+                        <p class="scene" v-html=" 'Scène - ' + programmeSamedi.acf.scene"></p>
+                        <hr>
+                        <div class="info-prog">
+                            <span class="prog-artiste" v-html="programmeSamedi.acf.artiste"></span><br>
+                            <span class="prog-horaire" v-html=" ' à ' +programmeSamedi.acf.horaire + ' heures '"></span>
+                        </div>
+                    </div>
+                </div>
+                <div v-if="affichage.programmeDimanche">
+                    <div v-for="programmeDimanche in programmesDimanche" class="programme">
+                        <p class="scene" v-html=" 'Scène - ' + programmeDimanche.acf.scene"></p>
+                        <hr>
+                        <div class="info-prog">
+                            <span class="prog-artiste" v-html="programmeDimanche.acf.artiste"></span><br>
+                            <span class="prog-horaire"
+                                v-html=" ' à ' +programmeDimanche.acf.horaire + ' heures '"></span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div v-if="affichage.partenaire">
+                <h1>Nos partenaires</h1>
+
+                <div v-for="partenaire in partenaires">
+                    <a :href="partenaire.acf.site"><img class="logo-partenaire" :src="partenaire.acf.logo.url"></a>
+                </div>
+            </div>
+            <div v-if="affichage.faq">
+                    <h1>F.A.Q.</h1>
+                <div v-for="faq in faqs">
+                    <p data-toggle="collapse" :href="'#collapseExample' + faq.id" aria-expanded="false"
+                        aria-controls="collapseExample" v-html="faq.acf.question"></p>
+                    <div class="collapse" :id="'collapseExample' + faq.id">
+                        <hr>
+                        <div class="card card-body" v-html="faq.acf.reponse"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <footer>
+
+
+    </footer>
+
+    <script type="text/javascript"
+        src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+
+
+    <script type="text/javascript" src="vue-js.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"> </script>
+    <script src=" https://cdnjs.cloudflare.com/ajax/libs/vue/2.3.4/vue.min.js "> </script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

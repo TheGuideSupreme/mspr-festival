@@ -1,0 +1,117 @@
+body{
+  background-color : #f5f5f5;
+  font-family: 'Raleway', sans-serif;
+}
+h1{
+  text-align: center;
+  font-family: 'Raleway';
+  padding: 10px 0;
+  font-size: 25px;
+}
+.programme{
+    color: black;
+    padding: 20px 0;
+}
+.programme p{
+  margin-bottom: 0;
+}
+.programme hr, .block-endroit hr, hr{
+    margin-top: 0;
+    margin-bottom: 10px;
+    border: 0;
+    border-top: 2px solid black;
+}
+
+.prog-artiste{
+  text-transform: uppercase;
+  text-align: center;
+  font-weight : 700;
+}
+.topbar{
+    background-image:linear-gradient( #f5c92f, #ff899e);
+}
+.nav li{
+  cursor: pointer;
+  font-weight :700;
+  color: black;
+}
+.nav li a{
+  text-decoration : none;
+  color : black;
+}
+.logo{
+display: block;
+width :50%;
+margin : 20px auto;
+float : right;
+}
+.navbar-brand{
+    display: inline;
+}
+.navbar.navbar-inverse{
+    padding: 0;
+}
+button.navbar-toggle.btn{
+    margin-top : 30px;
+}
+div#myNavbar{
+    padding-bottom: 20px;
+}
+.title {
+    position: absolute;
+    bottom: 0;
+    left: 10px;
+    color: white;
+    width: 100%;
+    padding: 10px;
+    background-image: linear-gradient(to right, #f5c92f, #e52487);
+    margin-bottom: 0!important;
+}
+.info-artiste{
+    position: relative;
+}
+.artiste{
+    padding: 0;
+}
+.btn-artiste{
+    background-color : black;
+    color : white;
+}
+
+
+  .modal{
+    width: 94%;
+  }
+  .info-modal{
+      text-align: center;
+      font-weight: 500;
+      margin-top: 10px;
+  }
+  .description-modal{
+      margin-top : 20px;
+      text-align: justify;
+  }
+
+  .boutons{
+    display: flex;
+    justify-content: space-evenly;
+    padding: 20px 0;
+  }
+  .boutons > button {
+    border : solid 1px #e52487;
+  }
+  .map {
+    height: 600px; 
+  }
+  img.logo-partenaire {
+    width: 80%;
+    margin-bottom: 20px;
+    display: block;
+    margin: 20px auto;
+}
+.block-endroit{
+  margin : 30px 0;
+  text-align: center;
+}
+
+
